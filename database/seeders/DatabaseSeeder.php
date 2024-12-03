@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\RolePermission;
+use App\Models\RolePermissionUserRole;
 use App\Models\User;
+use App\Models\UserRole;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,15 +16,53 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $rolesPermsMap = [
+            'admin' => [
+                'users:rw',
+                'profiles:rw',
+                'invoices:rw',
+                'cars:rw',
+                'dashboard:access'
+            ],
+            'driver' => [
+                'users:ro',
+                'cars:ro'
+            ],
+            'accounter' => [
+                'users:ro',
+                'profiles:ro',
+                'invoices:rw',
+                'cars:ro'
+            ],
+            'client' => [
+                'invoices:ro'
+            ]
+        ];
+
+        $createdPerms = [];
+        foreach ($rolesPermsMap as $role => $perms) {
+            $roleModel = UserRole::create(['name' => $role]);
+
+            foreach ($perms as $perm) {
+                if (in_array($perm, $createdPerms)) {
+                    continue;
+                }
+
+                $permModel = RolePermission::create(['ability' => $perm]);
+
+                RolePermissionUserRole::create([
+                    'permission_id' => $permModel->id,
+                    'role_id' => $roleModel->id
+                ]);
+
+                $createdPerms[] = $perm;
+            }
+        }
 
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
-        ]);
-        User::factory()->create([
-            'name' => 'Test User 2',
-            'email' => 'test2@example.com',
+            'role_id' => UserRole::find(1)->id
         ]);
     }
 }

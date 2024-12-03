@@ -8,6 +8,11 @@ Route::group([
     'middleware' => 'auth:sanctum'
 ], function () {
     Route::get('/user', function (Request $request) {
-        return $request->user();
+        $user = $request->user();
+        return response()->json([
+            'user' => $user,
+            'role' => $user->role->name,
+            'permissions' => $user->getPermissions()
+        ]);
     });
 });
