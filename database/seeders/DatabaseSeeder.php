@@ -64,5 +64,9 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
             'role_id' => UserRole::find(1)->id
         ]);
+
+        User::factory()
+            ->count(30)
+            ->create();
     }
 }

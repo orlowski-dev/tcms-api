@@ -1,18 +1,12 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
     'prefix' => 'api/v1',
     'middleware' => 'auth:sanctum'
 ], function () {
-    Route::get('/user', function (Request $request) {
-        $user = $request->user();
-        return response()->json([
-            'user' => $user,
-            'role' => $user->role->name,
-            'permissions' => $user->getPermissions()
-        ]);
-    });
+    Route::apiResource('users', UserController::class);
+    Route::post('/users/{id}/restore', [UserController::class, 'restore']);
 });
