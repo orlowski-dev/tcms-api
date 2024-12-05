@@ -55,8 +55,28 @@ class User extends Authenticatable
         return $this->belongsTo(UserRole::class);
     }
 
-    public function getPermissions()
+    public function getAbilities(): array
     {
         return $this->role->permissions->pluck('ability')->toArray();
+    }
+
+    public function hasAbility(string $ability): bool
+    {
+        return in_array($ability, $this->getAbilities(), true);
+    }
+
+    public function hasAnyAbility(array $abilities): bool
+    {
+        $userAbilities = $this->getAbilities();
+        $hasAbility = false;
+
+        foreach ($abilities as $ability) {
+            if (in_array($ability, $userAbilities, true)) {
+                $hasAbility = true;
+                break;
+            }
+        }
+
+        return $hasAbility;
     }
 }

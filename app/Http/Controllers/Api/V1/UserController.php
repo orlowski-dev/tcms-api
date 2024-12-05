@@ -9,14 +9,17 @@ use App\Http\Resources\V1\UserCollection;
 use App\Http\Resources\V1\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $this->allowRequestIf(Gate::inspect('view-all', $request->user())->allowed());
+
         $users = User::paginate(10);
 
         return new UserCollection($users);
@@ -39,6 +42,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $this->allowRequestIf(Gate::inspect('view', $user)->allowed());
+
         return new UserResource($user);
     }
 
@@ -56,6 +61,8 @@ class UserController extends Controller
      */
     public function destroy(Request $request, User $user)
     {
+        $this->allowRequestIf(Gate::inspect('delete', $request->user())->allowed());
+
         $softDelete = true;
 
         if ($request->post('forceDelete') == true) {
@@ -66,13 +73,15 @@ class UserController extends Controller
         }
 
         return response()->json([
-            'message' => 'User has been soft-deleted.',
+            'message' => 'User has been deleted.',
             'softDelete' => $softDelete
         ]);
     }
 
     public function restore(Request $request, string $id)
     {
+        $this->allowRequestIf(Gate::inspect('restore', $request->user())->allowed());
+
         $user = User::withTrashed()->find($id);
 
         if ($user && $user->trashed()) {
