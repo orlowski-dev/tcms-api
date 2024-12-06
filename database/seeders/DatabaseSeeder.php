@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\RolePermission;
 use App\Models\RolePermissionUserRole;
 use App\Models\User;
+use App\Models\UserProfile;
 use App\Models\UserRole;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -19,7 +20,6 @@ class DatabaseSeeder extends Seeder
         $rolesPermsMap = [
             'admin' => [
                 'users:rw',
-                'profiles:rw',
                 'invoices:rw',
                 'cars:rw',
                 'dashboard:access'
@@ -30,7 +30,6 @@ class DatabaseSeeder extends Seeder
             ],
             'accounter' => [
                 'users:ro',
-                'profiles:ro',
                 'invoices:rw',
                 'cars:ro'
             ],
@@ -68,5 +67,9 @@ class DatabaseSeeder extends Seeder
         User::factory()
             ->count(30)
             ->create();
+
+        foreach (User::all() as $user) {
+            UserProfile::factory()->create(['user_id' => $user->id]);
+        }
     }
 }

@@ -5,6 +5,8 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -55,6 +57,18 @@ class User extends Authenticatable
         return $this->belongsTo(UserRole::class);
     }
 
+    public function permissions(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            RolePermission::class,  // Final model (permissions)
+            RolePermissionUserRole::class,  // Intermediate pivot model
+            'role_id',  // Foreign key on pivot table (role_id)
+            'id',  // Foreign key on permissions table (permission_id)
+            'role_id',  // Local key on users table (role_id)
+            'permission_id'  // Local key on pivot table (permission_id)
+        );
+    }
+
     public function getAbilities(): array
     {
         return $this->role->permissions->pluck('ability')->toArray();
@@ -78,5 +92,10 @@ class User extends Authenticatable
         }
 
         return $hasAbility;
+    }
+
+    public function profile(): HasOne
+    {
+        return $this->hasOne(UserProfile::class, 'user_id');
     }
 }

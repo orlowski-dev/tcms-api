@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\V1\UsersFilter;
 use App\Http\Requests\V1\StoreUserRequest;
 use App\Http\Requests\V1\UpdateUserRequest;
 use App\Http\Resources\V1\UserCollection;
 use App\Http\Resources\V1\UserResource;
 use App\Models\User;
+use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -20,9 +22,19 @@ class UserController extends Controller
     {
         $this->allowRequestIf(Gate::inspect('view-all', $request->user())->allowed());
 
-        $users = User::paginate(10);
+        $filter = new UsersFilter();
+        $filteredQuery = $filter->transform($request);
+        $includeQuery = [
+            'profile',
+            'role',
+            'permissions'
+        ];
 
-        return new UserCollection($users);
+        $users = User::where($filteredQuery);
+
+        $users = $filter->includeRelations($users, $request, $includeQuery);
+
+        return new UserCollection($users->paginate(10));
     }
 
     /**
@@ -31,6 +43,7 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $newUser = User::create($request->all());
+        UserProfile::create(['user_id' => $newUser->id]);
 
         return response()->json([
             'data' => new UserResource($newUser)
@@ -40,9 +53,17 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(Request $request, User $user)
     {
         $this->allowRequestIf(Gate::inspect('view', $user)->allowed());
+        $filter = new UsersFilter();
+        $includeQuery = [
+            'profile',
+            'role',
+            'permissions'
+        ];
+
+        $user = $filter->includeRelations($user, $request, $includeQuery);
 
         return new UserResource($user);
     }
