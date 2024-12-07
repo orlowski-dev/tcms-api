@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\V1\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,10 +19,7 @@ class AuthenticateController extends Controller
 
         $user = Auth::user();
 
-        // TODO: use UserResource
-        return response()->json([
-            'data' => $user
-        ]);
+        return new UserResource($user);
     }
 
     public function destroy(Request $request)

@@ -1,0 +1,474 @@
+{
+  "author": "Unnamed",
+  "title": "tcms-v1",
+  "date": "2024-12-07T07:51:15.721Z",
+  "tables": [
+    {
+      "id": 0,
+      "name": "users",
+      "x": 169,
+      "y": -405,
+      "fields": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": true,
+          "notNull": true,
+          "increment": true,
+          "comment": "",
+          "id": 0,
+          "size": "",
+          "values": [],
+          "unsigned": true
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": 1,
+          "size": 150
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": true,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": 2,
+          "size": 250
+        },
+        {
+          "name": "password",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": 3,
+          "size": 250
+        },
+        {
+          "name": "email_verified_at",
+          "type": "DATETIME",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": false,
+          "increment": false,
+          "comment": "",
+          "id": 4,
+          "size": "",
+          "values": []
+        },
+        {
+          "name": "remember_token",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": false,
+          "increment": false,
+          "comment": "",
+          "id": 5,
+          "size": 250
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": false,
+          "increment": false,
+          "comment": "",
+          "id": 6,
+          "size": "",
+          "values": []
+        },
+        {
+          "name": "updated_at",
+          "type": "DATETIME",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": false,
+          "increment": false,
+          "comment": "",
+          "id": 7,
+          "size": "",
+          "values": []
+        },
+        {
+          "name": "deleted_at",
+          "type": "DATETIME",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": false,
+          "increment": false,
+          "comment": "",
+          "id": 8,
+          "size": "",
+          "values": []
+        },
+        {
+          "name": "role_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": 9,
+          "size": "",
+          "values": [],
+          "unsigned": true
+        }
+      ],
+      "comment": "",
+      "indices": [
+        {
+          "id": 0,
+          "name": "users_index_0",
+          "unique": false,
+          "fields": [
+            "id"
+          ]
+        },
+        {
+          "id": 1,
+          "name": "users_index_1",
+          "unique": false,
+          "fields": [
+            "email"
+          ]
+        }
+      ],
+      "color": "#175e7a",
+      "key": 1732694464106
+    },
+    {
+      "id": 1,
+      "name": "user_profiles",
+      "x": 173,
+      "y": 53,
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": true,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": 0,
+          "size": "",
+          "values": [],
+          "unsigned": true
+        },
+        {
+          "name": "phone_number",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": false,
+          "increment": false,
+          "comment": "",
+          "id": 1,
+          "size": 31
+        },
+        {
+          "name": "address",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": false,
+          "increment": false,
+          "comment": "",
+          "id": 2,
+          "size": 60
+        },
+        {
+          "name": "city",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": false,
+          "increment": false,
+          "comment": "",
+          "id": 3,
+          "size": 50
+        },
+        {
+          "name": "postal_code",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": false,
+          "increment": false,
+          "comment": "",
+          "id": 4,
+          "size": 12
+        }
+      ],
+      "comment": "",
+      "indices": [
+        {
+          "id": 0,
+          "name": "profiles_index_0",
+          "unique": false,
+          "fields": [
+            "user_id"
+          ]
+        }
+      ],
+      "color": "#175e7a",
+      "key": 1732695457931
+    },
+    {
+      "id": 2,
+      "name": "user_roles",
+      "x": -161.00000000000006,
+      "y": -157,
+      "fields": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": true,
+          "notNull": true,
+          "increment": true,
+          "comment": "",
+          "id": 0,
+          "size": "",
+          "values": [],
+          "unsigned": true
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": true,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": 1,
+          "size": 50
+        }
+      ],
+      "comment": "",
+      "indices": [
+        {
+          "id": 0,
+          "name": "roles_2_index_0",
+          "unique": false,
+          "fields": [
+            "id"
+          ]
+        },
+        {
+          "id": 1,
+          "name": "roles_2_index_1",
+          "unique": false,
+          "fields": [
+            "name"
+          ]
+        }
+      ],
+      "color": "#f03c3c",
+      "key": 1732782015712
+    },
+    {
+      "id": 3,
+      "name": "role_permissions",
+      "x": -158,
+      "y": -401.00000000000006,
+      "fields": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": true,
+          "notNull": true,
+          "increment": true,
+          "comment": "",
+          "id": 0,
+          "size": "",
+          "values": [],
+          "unsigned": true
+        },
+        {
+          "name": "ability",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": true,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": 1,
+          "size": 150
+        }
+      ],
+      "comment": "",
+      "indices": [
+        {
+          "id": 0,
+          "name": "abilities_index_0",
+          "unique": false,
+          "fields": [
+            "id"
+          ]
+        }
+      ],
+      "color": "#f03c3c",
+      "key": 1733132732463
+    },
+    {
+      "id": 4,
+      "name": "role_permissions_user_role",
+      "x": -453.00000000000006,
+      "y": -299.00000000000006,
+      "fields": [
+        {
+          "name": "permission_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": 0,
+          "size": "",
+          "values": []
+        },
+        {
+          "name": "role_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": 1,
+          "size": "",
+          "values": []
+        }
+      ],
+      "comment": "",
+      "indices": [
+        {
+          "id": 0,
+          "name": "ability_role_index_0",
+          "unique": false,
+          "fields": [
+            "ability_id"
+          ]
+        },
+        {
+          "id": 1,
+          "name": "ability_role_index_1",
+          "unique": false,
+          "fields": [
+            "role_id"
+          ]
+        }
+      ],
+      "color": "#f03c3c",
+      "key": 1733132823915
+    }
+  ],
+  "relationships": [
+    {
+      "startTableId": 1,
+      "startFieldId": 0,
+      "endTableId": 0,
+      "endFieldId": 0,
+      "cardinality": "one_to_one",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "name": "profiles_user_id_fk",
+      "id": 0
+    },
+    {
+      "startTableId": 2,
+      "startFieldId": 0,
+      "endTableId": 0,
+      "endFieldId": 9,
+      "cardinality": "one_to_one",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "name": "roles_id_fk",
+      "id": 1
+    },
+    {
+      "startTableId": 4,
+      "startFieldId": 0,
+      "endTableId": 3,
+      "endFieldId": 0,
+      "cardinality": "one_to_many",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "name": "ability_role_ability_id_fk",
+      "id": 2
+    },
+    {
+      "startTableId": 4,
+      "startFieldId": 1,
+      "endTableId": 2,
+      "endFieldId": 0,
+      "cardinality": "one_to_many",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "name": "ability_role_role_id_fk",
+      "id": 3
+    }
+  ],
+  "notes": [],
+  "subjectAreas": [],
+  "database": "mariadb"
+}
