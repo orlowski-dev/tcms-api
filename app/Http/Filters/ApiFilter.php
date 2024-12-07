@@ -3,7 +3,6 @@
 namespace App\Http\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Exception;
@@ -71,7 +70,7 @@ class ApiFilter
                     $param = $param->load($relationName);
                     break;
                 default:
-                    throw new Exception('$param must be an instance of Model or Collection.');
+                    throw new Exception('$param must be an instance of Model or Builder.');
             }
         }
 

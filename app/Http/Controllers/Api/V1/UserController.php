@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\V1\UserFilter;
 use App\Http\Filters\V1\UsersFilter;
 use App\Http\Requests\V1\StoreUserRequest;
 use App\Http\Requests\V1\UpdateUserRequest;
@@ -34,7 +35,7 @@ class UserController extends Controller
 
         $users = $filter->includeRelations($users, $request, $includeQuery);
 
-        return new UserCollection($users->paginate(10));
+        return new UserCollection($users->paginate(10)->append($request->all()));
     }
 
     /**
@@ -56,7 +57,7 @@ class UserController extends Controller
     public function show(Request $request, User $user)
     {
         $this->allowRequestIf(Gate::inspect('view', $user)->allowed());
-        $filter = new UsersFilter();
+        $filter = new UserFilter();
         $includeQuery = [
             'profile',
             'role',
@@ -95,7 +96,7 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'User has been deleted.',
-            'softDelete' => $softDelete
+            'softDeleted' => $softDelete
         ]);
     }
 
