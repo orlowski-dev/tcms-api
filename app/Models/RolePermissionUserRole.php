@@ -16,7 +16,7 @@ class RolePermissionUserRole extends Model
 
     protected $table = 'role_permission_user_role';
 
-    public $incrementing = false;
+    /* public $incrementing = false; */
 
     public $timestamps = false;
 }

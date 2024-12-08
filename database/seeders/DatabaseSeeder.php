@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
                 'users:ro',
                 'cars:ro'
             ],
-            'accounter' => [
+            'accountant' => [
                 'users:ro',
                 'invoices:rw',
                 'cars:ro'
@@ -43,11 +43,13 @@ class DatabaseSeeder extends Seeder
             $roleModel = UserRole::create(['name' => $role]);
 
             foreach ($perms as $perm) {
-                if (in_array($perm, $createdPerms)) {
-                    continue;
-                }
+                $permModel = null;
 
-                $permModel = RolePermission::create(['ability' => $perm]);
+                if (!in_array($perm, $createdPerms)) {
+                    $permModel = RolePermission::create(['ability' => $perm]);
+                } else {
+                    $permModel = RolePermission::where('ability', '=', $perm)->firstOrFail();
+                }
 
                 RolePermissionUserRole::create([
                     'permission_id' => $permModel->id,

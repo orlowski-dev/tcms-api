@@ -8,4 +8,5 @@ Route::group([
 ], function () {
     Route::post('/login', [AuthenticateController::class, 'authenticate']);
     Route::post('/logout', [AuthenticateController::class, 'destroy']);
+    Route::post('/change-password', [AuthenticateController::class, 'changePassword']);
 });

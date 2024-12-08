@@ -38,11 +38,20 @@ beforeEach(function () {
         'role_id' => UserRole::find(1)
     ]);
 
+    $this->fourthUser = User::factory()->create([
+        'role_id' => UserRole::find(2)
+    ]);
+
     $this->createUserData = [
         'name' => 'Test User',
         'email' => 'test@example.com',
         'password' => 'password',
         'roleId' => 2
+    ];
+
+    $this->changePasswordData = [
+        'userId' => $this->unprivilegedUser->id,
+        'newPassword' => 'password123'
     ];
 });
 
@@ -88,7 +97,7 @@ it('denies an unprivileged user to view a user', function () {
     $response->assertStatus(403);
 });
 
-it('allows a user to view its own model', function () {
+it('allows a user to view their own model', function () {
     actingAs($this->unprivilegedUser);
     $response = get(route('users.show', ['user' => $this->unprivilegedUser]));
 
@@ -135,4 +144,25 @@ it('denies an unprivileged user to restore a user', function () {
     $response = post("/api/v1/users/{$this->thirdUser->id}/restore");
 
     $response->assertStatus(403);
+});
+
+it('allows an privileged user to change user password', function () {
+    actingAs($this->privilegedUser);
+    $response = post('/id/change-password', $this->changePasswordData);
+
+    $response->assertStatus(200);
+});
+
+it('denies an unprivileged user to change user password', function () {
+    actingAs($this->fourthUser);
+    $response = post('/id/change-password', $this->changePasswordData);
+
+    $response->assertStatus(403);
+});
+
+it('allows user to change their password', function () {
+    actingAs($this->unprivilegedUser);
+    $response = post('/id/change-password', $this->changePasswordData);
+
+    $response->assertStatus(200);
 });

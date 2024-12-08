@@ -69,6 +69,33 @@ Logout a user.
 {
     "message": "Use has been logged out."
 }
+
+```
+
+## POST /id/change-password
+
+### Request
+
+| Key         | Data type | Required |
+|-------------|-----------|----------|
+| userId      | int       | Yes      |
+| newPassword | string    | Yes      |
+
+#### Example
+
+```json
+{
+    "userId": 32,
+    "newPassword": "password123"
+}
+```
+
+### Response
+
+```json
+{
+    "message": "Password has been changed."
+}
 ```
 
 
