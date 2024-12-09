@@ -7,7 +7,6 @@ use App\Models\RolePermissionUserRole;
 use App\Models\User;
 use App\Models\UserProfile;
 use App\Models\UserRole;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,7 +21,7 @@ class DatabaseSeeder extends Seeder
                 'users:rw',
                 'invoices:rw',
                 'cars:rw',
-                'dashboard:access'
+                'logs:ro'
             ],
             'driver' => [
                 'users:ro',
@@ -35,6 +34,9 @@ class DatabaseSeeder extends Seeder
             ],
             'client' => [
                 'invoices:ro'
+            ],
+            'system' => [
+                'logs:rw'
             ]
         ];
 
@@ -61,6 +63,12 @@ class DatabaseSeeder extends Seeder
         }
 
         User::factory()->create([
+            'name' => 'System Worker',
+            'email' => 'system@example.com',
+            'role_id' => UserRole::find(5)->id
+        ]);
+
+        User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
             'role_id' => UserRole::find(1)->id
@@ -70,7 +78,7 @@ class DatabaseSeeder extends Seeder
             ->count(30)
             ->create();
 
-        foreach (User::all() as $user) {
+        foreach (User::where('name', '!=', 'System Worker')->get() as $user) {
             UserProfile::factory()->create(['user_id' => $user->id]);
         }
     }

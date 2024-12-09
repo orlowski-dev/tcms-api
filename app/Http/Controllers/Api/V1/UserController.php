@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -35,7 +36,7 @@ class UserController extends Controller
 
         $users = $filter->includeRelations($users, $request, $includeQuery);
 
-        return new UserCollection($users->paginate(10)->append($request->all()));
+        return new UserCollection($users->paginate(10)->appends($request->all()));
     }
 
     /**
@@ -44,6 +45,8 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $newUser = User::create($request->all());
+        $newUser->setRememberToken(Str::random(60));
+        $newUser->save();
         UserProfile::create(['user_id' => $newUser->id]);
 
         return response()->json([

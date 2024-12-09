@@ -7,10 +7,10 @@ use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Models\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AuthenticateController extends Controller
 {
@@ -23,7 +23,11 @@ class AuthenticateController extends Controller
 
         $user = Auth::user();
 
-        return new UserResource($user);
+        return response()->json([
+            'data' => new UserResource($user)
+        ])->withHeaders([
+            'Set-Cookie' => "remember_token={$user->getRememberToken()}"
+        ]);
     }
 
     public function destroy(Request $request)
@@ -44,12 +48,14 @@ class AuthenticateController extends Controller
         $user = User::find($requestData['userId']);
         $user->forceFill([
             'password' => Hash::make($requestData['newPassword'])
-        ]);
+        ])->setRememberToken(Str::random(60));
 
         $user->save();
 
         return response()->json([
             'message' => 'Password has been changed.'
+        ])->withHeaders([
+            'Set-Cookie' => "remember_token={$user->getRememberToken()}"
         ]);
     }
 }
