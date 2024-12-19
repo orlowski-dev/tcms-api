@@ -1,18 +1,19 @@
 <?php
 
-namespace Tests\Feature\models;
+namespace Tests\Feature\Models;
 
 use App\Models\User;
 use App\Models\UserProfile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class UserProfileModelTest extends TestCase
+class UserModelTest extends TestCase
 {
     use RefreshDatabase;
 
-    private $user = null;
-    private $userProfile = null;
+    private $user;
+
+    private $userProfile;
 
     public function setUp(): void
     {
@@ -22,8 +23,8 @@ class UserProfileModelTest extends TestCase
         $this->userProfile = UserProfile::factory()->create(['user_id' => $this->user->id]);
     }
 
-    public function testUserRelation(): void
+    public function testUserProfileRelation(): void
     {
-        $this->assertEquals($this->userProfile->user_id, $this->userProfile->user->id);
+        $this->assertEquals($this->userProfile->id, $this->user->profile->id);
     }
 }
