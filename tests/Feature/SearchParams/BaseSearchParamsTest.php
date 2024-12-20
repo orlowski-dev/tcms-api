@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\Feature\Filters;
+namespace Tests\Feature\SearchParams;
 
-use App\Http\Filters\ApiFilter;
+use App\Http\SearchParams\BaseSearchParams;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Tests\TestCase;
 
-class TempFilters extends ApiFilter
+class TempSearchParams extends BaseSearchParams
 {
     protected $relationNames = [
         'profile'
@@ -24,12 +24,12 @@ class TempFilters extends ApiFilter
     ];
 }
 
-class ApiFilterTest extends TestCase
+class BaseSearchParamsTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $user;
-    protected $filteredQuery;
+    private $user;
+    private $filteredQuery;
 
     public function setUp(): void
     {
@@ -38,7 +38,7 @@ class ApiFilterTest extends TestCase
         $this->user = User::factory()->create();
     }
 
-    public function testTransform(): void
+    public function testMakeEloquentQuery(): void
     {
         $searchQuery = [
             'a' => ['eq' => 1],
@@ -46,12 +46,13 @@ class ApiFilterTest extends TestCase
             'c' => ['lt' => 1],
             'd' => ['lte' => 1],
             'e' => ['gt' => 1],
-            'f' => ['gte' => 1]
+            'f' => ['gte' => 1],
+            'g' => ['eq' => 1]
         ];
         $request = Request::create('/', 'GET', $searchQuery);
 
-        $filter = new TempFilters();
-        $this->filteredQuery = $filter->transform($request);
+        $tsp = new TempSearchParams();
+        $this->filteredQuery = $tsp->makeEloquentQuery($request);
         $expected = [
             ['a', '=', 1],
             ['b', '!=', 1],
@@ -67,8 +68,8 @@ class ApiFilterTest extends TestCase
     public function testIncludeRelationsOnModel(): void
     {
         $request = Request::create('/', 'GET', ['includeProfile' => true]);
-        $filter = new TempFilters();
-        $obj = $filter->includeRelations($this->user, $request);
+        $tsp = new TempSearchParams();
+        $obj = $tsp->includeRelations($this->user, $request);
         $loaded = $obj->relationLoaded('profile');
         $this->assertEquals(true, $loaded);
     }
@@ -78,8 +79,8 @@ class ApiFilterTest extends TestCase
         $request = Request::create('/', 'GET', ['includeProfile' => true]);
 
         $builder = User::where($this->filteredQuery);
-        $filters = new TempFilters();
-        $builder = $filters->includeRelations($builder, $request);
+        $tsp = new TempSearchParams();
+        $builder = $tsp->includeRelations($builder, $request);
         $builderRelations = $builder->getEagerLoads();
         $this->assertEquals(true, isset($builderRelations['profile']));
     }

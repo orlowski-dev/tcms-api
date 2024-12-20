@@ -2,13 +2,13 @@
 
 namespace App\Http\Resources\V1;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Request;
 
 class UserCollection extends ResourceCollection
 {
     /**
-     * Transform the resource collection into an array.
+     * makeEloquentQuery the resource collection into an array.
      *
      * @return array<int|string, mixed>
      */

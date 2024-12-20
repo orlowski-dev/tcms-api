@@ -7,4 +7,5 @@ Route::group([
     'prefix' => 'v1'
 ], function () {
     Route::apiResource('users', UserController::class);
+    Route::post('/users/{userId}/restore', [UserController::class, 'restore']);
 });

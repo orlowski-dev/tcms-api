@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Filters;
+namespace App\Http\SearchParams;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Exception;
 
-class ApiFilter
+class BaseSearchParams
 {
     protected $relationNames = [];
 
@@ -23,7 +23,12 @@ class ApiFilter
     protected $safeParams = [];
     protected $columnMap = [];
 
-    public function transform(Request $request): array
+    /**
+     * Transorms the search parameters into an eloquent query that respects the allowed parameter names and their operators.
+     * @param \Illuminate\Http\Request $request
+     * @return array
+     */
+    public function makeEloquentQuery(Request $request): array
     {
         $eloquentQuery = [];
 
@@ -46,6 +51,13 @@ class ApiFilter
         return $eloquentQuery;
     }
 
+    /**
+     * Enables dynamic inclusion of relations in Eloquent model (Model or Builder) based on safe parameters passed in the request.
+     * @param mixed $obj
+     * @param \Illuminate\Http\Request $request
+     * @throws \Exception
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder
+     */
     public function includeRelations($obj, Request $request): Model|Builder
     {
         foreach ($this->relationNames as $relationName) {
