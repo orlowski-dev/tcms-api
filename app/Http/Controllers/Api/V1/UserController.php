@@ -34,9 +34,7 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $newUser = User::create($request->all());
-        // $profile = UserProfile::factory()->create(['user_id' => $newUser->id]);
-        $profile = UserProfile::create(['user_id' => $newUser->id]);
-        var_dump($profile->id);
+        UserProfile::create(['user_id' => $newUser->id]);
         return new UserResource($newUser);
     }
 
