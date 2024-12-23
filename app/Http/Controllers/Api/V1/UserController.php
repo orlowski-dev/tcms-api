@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\StoreUserRequest;
+use App\Http\Requests\V1\UpdateUserRequest;
 use App\Http\Resources\V1\UserCollection;
 use App\Http\Resources\V1\UserResource;
 use App\Http\SearchParams\V1\UserSearchParams;
 use App\Models\User;
+use App\Models\UserProfile;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -28,9 +31,13 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        //
+        $newUser = User::create($request->all());
+        // $profile = UserProfile::factory()->create(['user_id' => $newUser->id]);
+        $profile = UserProfile::create(['user_id' => $newUser->id]);
+        var_dump($profile->id);
+        return new UserResource($newUser);
     }
 
     /**
@@ -46,9 +53,10 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        $user->update($request->all());
+        return new UserResource($user);
     }
 
     /**

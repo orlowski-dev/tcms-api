@@ -35,9 +35,10 @@ class UserControllerTest extends TestCase
                 'name' => 'Test User',
                 'email' => 'test@email.com'
             ])
+            ->has(UserProfile::factory()->count(1), 'profile')
             ->create();
 
-        $this->userProfile = UserProfile::factory()->create(['user_id' => $this->user->id]);
+        $this->userProfile = $this->user->profile;
         $this->expectedUserProfileData = [
             'phoneNumber' => $this->userProfile->phone_number,
             'address' => $this->userProfile->address,
@@ -156,6 +157,9 @@ class UserControllerTest extends TestCase
 
         $this->assertNull(User::withTrashed()->find($user->id));
 
+        // check if user profile was deleted as well (cascadeOnDelete)
+        $this->assertNull(UserProfile::find($user->id));
+
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -172,5 +176,52 @@ class UserControllerTest extends TestCase
         $response->assertStatus(200);
         $user = User::find($user->id);
         $this->assertEquals(false, $user->trashed());
+    }
+
+    public function testUserStore(): void
+    {
+        $data = [
+            'email' => fake()->email(),
+            'name' => fake()->name()
+        ];
+
+        $response = $this->post(route('users.store'), [
+            ...$data,
+            'password' => 'password'
+        ]);
+
+        $user = User::where('email', $data['email'])->first();
+        $this->assertNotNull($user);
+
+        // check if user profile was created on user create
+        $this->assertEquals($user->id, UserProfile::find($user->id)->user_id);
+
+        $response
+            ->assertStatus(201)
+            ->assertJson([
+                'data' => $data
+            ]);
+    }
+
+    public function testUserUpdate(): void
+    {
+        $user = User::inRandomOrder()->first();
+        $data = [
+            'name' => fake()->name()
+        ];
+
+        $response = $this->put(route('users.update', $user), $data);
+        $response
+            ->assertStatus(200)
+            ->assertJson(['data' => $data]);
+
+        $data = [
+            'name' => fake()->name()
+        ];
+
+        $response = $this->patch(route('users.update', $user), $data);
+        $response
+            ->assertStatus(200)
+            ->assertJson(['data' => [...$data, 'email' => $user->email]]);
     }
 }

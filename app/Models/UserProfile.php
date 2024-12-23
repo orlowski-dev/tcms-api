@@ -16,6 +16,7 @@ class UserProfile extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'user_id',
         'phone_number',
         'address',
         'city',
